@@ -4,7 +4,12 @@ namespace App\Http\Controllers\Admin\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
+use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Illuminate\Routing\Redirector;
 use Illuminate\Support\Facades\Auth;
 
 class LoginController extends Controller
@@ -41,6 +46,18 @@ class LoginController extends Controller
     public function showLoginForm()
     {
         return view('backend.auth.login');
+    }
+
+    /**
+     * @param Request $request
+     * @return Application|\Illuminate\Foundation\Application|Redirector|RedirectResponse|JsonResponse
+     *
+     */
+    protected function loggedOut(Request $request)
+    {
+        return $request->wantsJson()
+            ? new JsonResponse([], 204)
+            : redirect('/admin/login');
     }
     /**
      * Get the guard to be used during authentication.
